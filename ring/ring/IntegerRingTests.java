@@ -12,14 +12,16 @@ public class IntegerRingTests {
         assertEquals(new Integer(3), ring.sum(1, 2));
         assertEquals(new Integer(-2), ring.sum(1, -3));
         assertEquals(Integer.MIN_VALUE, ring.sum(Integer.MAX_VALUE, 1).intValue());
+        assertThrows(NullPointerException.class, () -> ring.sum(null, new Integer(1)));
     }
 
     @Test
     public void product() {
         assertEquals(new Integer(8), ring.product(4, 2));
         assertEquals(new Integer(-6), ring.product(2, -3));
-        assertEquals(new Integer(0), ring.product(0, 1));
         assertEquals(new Integer(6), ring.product(-2, -3));
+        assertEquals(new Integer(0), ring.product(0, 1));
+        assertThrows(NullPointerException.class, () -> ring.product(null, new Integer(1)));
     }
 
     @Test
