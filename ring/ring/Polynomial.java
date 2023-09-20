@@ -37,7 +37,6 @@ public final class Polynomial<T> implements Iterable<T> {
     }
 
     public ListIterator<T> listIterator(int i) {
-        Objects.requireNonNull(i);
         ListIterator<T> iterator = coefficients.listIterator(i);
         return iterator;
     }
