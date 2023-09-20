@@ -1,32 +1,41 @@
 package ring;
 
-public final class PolynomialRing<T> implements Ring<Polynomial<T>> {
-    private PolynomialRing(T type) {
-        // throws no exception
-        // initialize private Ring of type T
-    }
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-    public static <T> PolynomialRing<T> instance() {
-        return null;
+public final class PolynomialRing<T> implements Ring<Polynomial<T>> {
+    private Ring<T> baseRing;
+
+    private PolynomialRing(Ring<T> ring) {
+        assert ring != null : " ring cannot be null";
+        this.baseRing = ring;
     }
 
     public Polynomial<T> zero() {
-        // polynomial with no coefficients
-        return null;
+        return Polynomial.from(new ArrayList<T>());
     }
     
     public Polynomial<T> identity() {
-        // one coefficient equal to identity of base ring
-        return null;
+        List<T> identity = new ArrayList<T>();
+        identity.add(baseRing.identity());
+        return Polynomial.from(identity);
     }
 
     public Polynomial<T> sum(Polynomial<T> x, Polynomial<T> y) {
-        // implement polynomial plus
-        return null;
+        Objects.requireNonNull(x);
+        Objects.requireNonNull(y);
+        return x.plus(y, baseRing);
     }
 
     public Polynomial<T> product(Polynomial<T> x, Polynomial<T> y) {
-        // implement polynomial times
-        return null;
+        Objects.requireNonNull(x);
+        Objects.requireNonNull(y);
+        return x.times(y, baseRing);
     }
+    
+    public static <T> PolynomialRing<T> instance(Ring<T> ring) {
+        return new PolynomialRing<T>(ring);
+    }
+
 }
