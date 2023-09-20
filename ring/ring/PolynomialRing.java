@@ -12,10 +12,15 @@ public final class PolynomialRing<T> implements Ring<Polynomial<T>> {
         this.baseRing = ring;
     }
 
-    public Polynomial<T> zero() {
-        return Polynomial.from(new ArrayList<T>());
+    public static <T> PolynomialRing<T> instance(Ring<T> ring) {
+        Objects.requireNonNull(ring);
+        return new PolynomialRing<T>(ring);
     }
-    
+
+    public Polynomial<T> zero() {
+        return Polynomial.from(new ArrayList<T>(){{add(baseRing.zero());}});
+    }
+
     public Polynomial<T> identity() {
         List<T> identity = new ArrayList<T>();
         identity.add(baseRing.identity());
@@ -33,9 +38,4 @@ public final class PolynomialRing<T> implements Ring<Polynomial<T>> {
         Objects.requireNonNull(y);
         return x.times(y, baseRing);
     }
-    
-    public static <T> PolynomialRing<T> instance(Ring<T> ring) {
-        return new PolynomialRing<T>(ring);
-    }
-
 }
