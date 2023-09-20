@@ -1,42 +1,91 @@
 package ring;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
-public final class Polynomial<T> {
-    // implement iterable interface
-    // iterator.next() returns the polynomial coefficients
+public final class Polynomial<T> implements Iterable<T> {
+    List<T> coefficients;
 
     private Polynomial(List<T> coefficients) {
-        // assert list not null
-        // set coefficients
+        assert coefficients != null : " Coefficients cannot be null";
+        this.coefficients = coefficients;
     }
 
     public static final <S> Polynomial<S> from(List<S> coefficients) {
-        // return new polynomial made from an immutable copy of the coefficients
-        return null;
+        Objects.requireNonNull(coefficients);
+        return new Polynomial<S>(coefficients);
     }
 
-    public <S> Polynomial<S> get() {
-        // return a mutable list copied from coefficients
-        // override toString() to print coefficients
-        return null;
+    @Override
+    public String toString() {
+        return coefficients.toString();
+    }
+
+    public Iterator<T> iterator() {
+        return new PolynomialIterator<T>(this);
+    }
+
+    public List<T> get() {
+        return new ArrayList<T>(coefficients);
+    }
+
+    public ListIterator<T> listIterator() {
+        return listIterator(0);
     }
 
     public ListIterator<T> listIterator(int i) {
-        // initial call to next returns p_i
-        // initial call to previous returns p_i-1
-        return null;
+        Objects.requireNonNull(i);
+        ListIterator<T> iterator = coefficients.listIterator(i);
+        return iterator;
     }
 
-    // for times and plus ---
-    // do not iterate through padding coefficients
-    // efficient for arrays and linked lists
     public Polynomial<T> plus(Polynomial<T> other, Ring<T> ring) {
-        return null;
+        Objects.requireNonNull(other);
+        Objects.requireNonNull(ring);
+
+        List<T> result = new ArrayList<T>();
+        ListIterator<T> thisIterator = this.listIterator();
+        ListIterator<T> otherIterator = other.listIterator();
+        while (thisIterator.hasNext() && otherIterator.hasNext()) {
+            result.add(ring.sum(thisIterator.next(), otherIterator.next()));
+        }
+        // check that both polynomials have been exhausted
+        while (thisIterator.hasNext()) {
+            result.add(thisIterator.next());
+        }
+        while (otherIterator.hasNext()) {
+            result.add(otherIterator.next());
+        }
+        return Polynomial.from(result);
     }
 
     public Polynomial<T> times(Polynomial<T> other, Ring<T> ring) {
-        return null;
+        Objects.requireNonNull(other);
+        Objects.requireNonNull(ring);
+        if (this.coefficients.size() == 0 || other.coefficients.size() == 0) {
+            return Polynomial.from(new ArrayList<T>());
+        }
+
+        List<T> result = new ArrayList<T>();
+        T currentTotal;
+        for (int i = 1; i < this.coefficients.size() + other.coefficients.size(); i++) {
+            currentTotal = ring.zero(); // account for ring zero
+            // set iterator start to account for padding coefficients
+            int thisStart = Math.min(i, this.coefficients.size());
+            int otherStart = Math.max(0, i - this.coefficients.size());
+
+            ListIterator<T> thisIterator = this.listIterator(thisStart);
+            ListIterator<T> otherIterator = other.listIterator(otherStart);
+
+            while (thisIterator.hasPrevious() && otherIterator.hasNext()) {
+                currentTotal = ring.sum(currentTotal, ring.product(thisIterator.previous(), otherIterator.next()));
+            }
+            result.add(currentTotal);
+        }
+
+        return Polynomial.from(result);
     }
 }
