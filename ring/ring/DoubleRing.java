@@ -1,5 +1,7 @@
 package ring;
 
+import java.util.Objects;
+
 class DoubleRing implements Ring<Double> {
     public Double zero() {
         return 0.0;
@@ -10,14 +12,14 @@ class DoubleRing implements Ring<Double> {
     }
 
     public Double sum(Double x, Double y) {
-        if (x == null || y == null)
-            throw new NullPointerException("Arguments cannont be null");
+        Objects.requireNonNull(x);
+        Objects.requireNonNull(y);
         return x + y;
     }
 
     public Double product(Double x, Double y) {
-        if (x == null || y == null)
-            throw new NullPointerException("Arguments cannont be null");
+        Objects.requireNonNull(x);
+        Objects.requireNonNull(y);
         return x * y;
     }
 }

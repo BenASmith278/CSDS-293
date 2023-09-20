@@ -1,5 +1,7 @@
 package ring;
 
+import java.util.Objects;
+
 class IntegerRing implements Ring<Integer> {
     public Integer zero() {
         return 0;
@@ -10,14 +12,14 @@ class IntegerRing implements Ring<Integer> {
     }
 
     public Integer sum(Integer x, Integer y) {
-        if (x == null || y == null)
-            throw new NullPointerException("Arguments cannont be null");
+        Objects.requireNonNull(x);
+        Objects.requireNonNull(y);
         return x + y;
     }
 
     public Integer product(Integer x, Integer y) {
-        if (x == null || y == null)
-            throw new NullPointerException("Arguments cannont be null");
+        Objects.requireNonNull(x);
+        Objects.requireNonNull(y);
         return x * y;
     }
 }
