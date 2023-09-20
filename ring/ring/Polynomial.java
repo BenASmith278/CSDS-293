@@ -10,7 +10,7 @@ public final class Polynomial<T> implements Iterable<T> {
     List<T> coefficients;
 
     private Polynomial(List<T> coefficients) {
-        assert coefficients != null : " Coefficients cannot be null";
+        assert coefficients != null : " coefficients cannot be null";
         this.coefficients = coefficients;
     }
 
