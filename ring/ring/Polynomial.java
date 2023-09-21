@@ -1,6 +1,7 @@
 package ring;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -10,13 +11,14 @@ public final class Polynomial<T> implements Iterable<T> {
     List<T> coefficients;
 
     private Polynomial(List<T> coefficients) {
-        assert coefficients != null : " coefficients cannot be null";
+        assert coefficients != null;
         this.coefficients = coefficients;
     }
 
     public static final <S> Polynomial<S> from(List<S> coefficients) {
         Objects.requireNonNull(coefficients);
-        return new Polynomial<S>(coefficients);
+        List<S> coefficientsCopy = Collections.unmodifiableList(coefficients);
+        return new Polynomial<S>(coefficientsCopy);
     }
 
     @Override
@@ -27,15 +29,18 @@ public final class Polynomial<T> implements Iterable<T> {
     @Override
     @SuppressWarnings("unchecked")
     public boolean equals(Object other) {
-        if (other == null) return false;
-        if (other == this) return true;
-        if (!(other instanceof Polynomial)) return false;
+        if (other == null)
+            return false;
+        if (other == this)
+            return true;
+        if (!(other instanceof Polynomial))
+            return false;
         Polynomial<T> p = (Polynomial<T>) other;
         return this.coefficients.equals(p.coefficients);
     }
 
     public Iterator<T> iterator() {
-        return new PolynomialIterator<T>(this);
+        return coefficients.iterator();
     }
 
     public List<T> get() {
@@ -72,9 +77,7 @@ public final class Polynomial<T> implements Iterable<T> {
     }
 
     public Polynomial<T> times(Polynomial<T> other, Ring<T> ring) {
-        Objects.requireNonNull(other);
-        Objects.requireNonNull(ring);
-        if (this.coefficients.size() == 0 || other.coefficients.size() == 0) {
+        if (timesHelper(other, ring)) {
             return Polynomial.from(new ArrayList<T>());
         }
 
@@ -96,5 +99,15 @@ public final class Polynomial<T> implements Iterable<T> {
         }
 
         return Polynomial.from(result);
+    }
+
+    public boolean timesHelper(Polynomial<T> other, Ring<T> ring) {
+        // check parameters
+        Objects.requireNonNull(other);
+        Objects.requireNonNull(ring);
+        if (this.coefficients.size() == 0 || other.coefficients.size() == 0) {
+            return true;
+        }
+        return false;
     }
 }
