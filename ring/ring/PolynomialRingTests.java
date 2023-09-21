@@ -63,6 +63,6 @@ public class PolynomialRingTests {
 
         assertEquals(polynomialRing.product(fullShort, empty), empty);
         assertEquals(polynomialRing.product(fullShort, full), Polynomial.from(new ArrayList<Integer>(){{add(4); add(13); add(22); add(15);}}));
-        assertEquals(polynomialRing.product(fullShort, fullTwo), Polynomial.from(new ArrayList<Integer>(){{add(16); add(29); add(30); add(15);}}));
+        assertEquals(polynomialRing.product(fullShort, fullTwo), Polynomial.from(new ArrayList<Integer>(){{add(16); add(40); add(49); add(30);}}));
     }
 }

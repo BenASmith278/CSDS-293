@@ -81,10 +81,10 @@ public class PolynomialTests {
 
         assertEquals(full.times(empty, new IntegerRing()), empty);
         assertEquals(full.times(fullTwo, new IntegerRing()), Polynomial.from(new ArrayList<Integer>(){{add(4); add(13); add(28); add(27); add(18);}}));
-        assertEquals(full.times(fullShort, new IntegerRing()), Polynomial.from(new ArrayList<Integer>(){{add(4); add(13); add(28); add(15);}}));
+        assertEquals(full.times(fullShort, new IntegerRing()), Polynomial.from(new ArrayList<Integer>(){{add(4); add(13); add(22); add(15);}}));
 
         assertEquals(fullShort.times(empty, new IntegerRing()), empty);
-        assertEquals(fullShort.times(full, new IntegerRing()), Polynomial.from(new ArrayList<Integer>(){{add(4); add(13); add(28); add(15);}}));
-        assertEquals(fullShort.times(fullTwo, new IntegerRing()), Polynomial.from(new ArrayList<Integer>(){{add(16); add(29); add(34); add(15);}}));
+        assertEquals(fullShort.times(full, new IntegerRing()), Polynomial.from(new ArrayList<Integer>(){{add(4); add(13); add(22); add(15);}}));
+        assertEquals(fullShort.times(fullTwo, new IntegerRing()), Polynomial.from(new ArrayList<Integer>(){{add(16); add(40); add(49); add(30);}}));
     }
 }
