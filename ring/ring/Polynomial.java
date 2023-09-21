@@ -24,6 +24,16 @@ public final class Polynomial<T> implements Iterable<T> {
         return coefficients.toString();
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean equals(Object other) {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Polynomial)) return false;
+        Polynomial<T> p = (Polynomial<T>) other;
+        return this.coefficients.equals(p.coefficients);
+    }
+
     public Iterator<T> iterator() {
         return new PolynomialIterator<T>(this);
     }

@@ -25,6 +25,15 @@ public class PolynomialTests {
     }
 
     @Test
+    public void equals() {
+        assertEquals(empty, empty);
+        assertEquals(full, full);
+        assertEquals(full, Polynomial.from(new ArrayList<Integer>(){{add(1); add(2); add(3);}}));
+        assertNotEquals(empty, full);
+        assertNotEquals(full, empty);
+    }
+
+    @Test
     public void get() {
         assertEquals(new ArrayList<Integer>(), empty.get());
         assertEquals(new ArrayList<Integer>(){{add(1); add(2); add(3);}}, full.get());
