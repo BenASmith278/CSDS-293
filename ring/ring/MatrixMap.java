@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -103,6 +104,50 @@ public final class MatrixMap<T> {
         }
     }
 
+    static class InconsistentSizeException extends RuntimeException {
+        private Indexes thisIndexes;
+        private Indexes otherIndexes;
+
+        public InconsistentSizeException(Indexes thisIndexes, Indexes otherIndexes) {
+            this.thisIndexes = thisIndexes;
+            this.otherIndexes = otherIndexes;
+        }
+
+        public Indexes getThisIndexes() {
+            return thisIndexes;
+        }
+
+        public Indexes getOtherIndexes() {
+            return otherIndexes;
+        }
+
+        public static <T> Indexes requireMatchingSize(MatrixMap<T> thisMatrix, MatrixMap<T> otherMatrix) {
+            if (thisMatrix.size() != otherMatrix.size()) {
+                throw new IllegalArgumentException(new InconsistentSizeException(thisMatrix.size(), otherMatrix.size()));
+            }
+            return thisMatrix.size();
+        }
+    }
+
+    static class nonSquareException extends RuntimeException {
+        private final Indexes indexes;
+
+        public nonSquareException(Indexes indexes) {
+            this.indexes = indexes;
+        }
+
+        public Indexes getIndexes() {
+            return indexes;
+        }
+
+        public static Indexes requireDiagonal(Indexes indexes) {
+            if (!(indexes.areDiagonal())) {
+                throw new IllegalArgumentException(new nonSquareException(indexes));
+            }
+            return indexes;
+        }
+    }
+
     public static <S> MatrixMap<S> instance(int rows, int columns, Function<Indexes, S> valueMapper) {
         Indexes size = new Indexes(rows, columns);
         return instance(size, valueMapper);
@@ -137,10 +182,21 @@ public final class MatrixMap<T> {
         return instance(indexes, (values) -> matrix[values.row()][values.column()]);
     }
 
-    public static void main(String[] args) {
-        Integer[][] arr = { { 0, 1, 2 }, { 1, 2, 3 }, { 2, 3, 4} };
-        MatrixMap<Integer> one = MatrixMap.from(arr);
-        MatrixMap<Integer> two = MatrixMap.from(arr);
-        System.out.println(one.equals(two));
+    public MatrixMap<T> plus(MatrixMap<T> other, BinaryOperator<T> plus) {
+        Objects.requireNonNull(other);
+        Objects.requireNonNull(plus);
+        InconsistentSizeException.requireMatchingSize(this, other);
+
+        return null;
+    }
+
+    public MatrixMap<T> times(MatrixMap<T> other, Ring<T> ring) {
+        Objects.requireNonNull(ring);
+        Objects.requireNonNull(other);
+        InconsistentSizeException.requireMatchingSize(this, other);
+        nonSquareException.requireDiagonal(this.size());
+        nonSquareException.requireDiagonal(other.size());
+        
+        return null;
     }
 }
