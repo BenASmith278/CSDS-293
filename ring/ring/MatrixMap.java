@@ -195,6 +195,20 @@ public final class MatrixMap<T> {
         InconsistentSizeException.requireMatchingSize(this, other);
         NonSquareException.requireDiagonal(this.size());
 
-        return instance(this.size(), indexes -> ring.product(this.value(indexes), other.value(indexes)));
+        return instance(this.size(), indexes -> timesHelper(indexes, ring, this, other));
+    }
+
+    private T timesHelper(Indexes index, Ring<T> ring, MatrixMap<T> thisMatrix, MatrixMap<T> otherMatrix) {
+        T sum = ring.zero();
+        int size = this.size().row();
+        for (int i = 0; i <= size; i++) {
+            Indexes thisIndex = new Indexes(index.row(), i);
+            Indexes otherIndex = new Indexes(i, index.column());
+            T thisVal = thisMatrix.value(thisIndex);
+            T otherVal = otherMatrix.value(otherIndex);
+            sum = ring.sum(ring.product(thisVal, otherVal), sum);
+        }
+
+        return sum;
     }
 }
