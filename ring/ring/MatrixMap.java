@@ -120,7 +120,7 @@ public final class MatrixMap<T> {
         }
 
         public static <T> Indexes requireMatchingSize(MatrixMap<T> thisMatrix, MatrixMap<T> otherMatrix) {
-            if (thisMatrix.size() != otherMatrix.size()) {
+            if (!(thisMatrix.size().equals(otherMatrix.size()))) {
                 throw new IllegalArgumentException(
                         new InconsistentSizeException(thisMatrix.size(), otherMatrix.size()));
             }
