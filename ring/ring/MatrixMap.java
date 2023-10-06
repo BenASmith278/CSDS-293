@@ -168,7 +168,7 @@ public final class MatrixMap<T> {
     }
 
     public static <S> MatrixMap<S> identity(int size, S zero, S identity) {
-        return instance(size, size, (indexes) -> {
+        return instance(new Indexes(size, size), (indexes) -> {
             if (indexes.areDiagonal()) {
                 return identity;
             }
