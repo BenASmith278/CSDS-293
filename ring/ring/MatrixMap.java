@@ -128,10 +128,10 @@ public final class MatrixMap<T> {
         }
     }
 
-    static class nonSquareException extends RuntimeException {
+    static class NonSquareException extends RuntimeException {
         private final Indexes indexes;
 
-        public nonSquareException(Indexes indexes) {
+        public NonSquareException(Indexes indexes) {
             this.indexes = indexes;
         }
 
@@ -141,7 +141,7 @@ public final class MatrixMap<T> {
 
         public static Indexes requireDiagonal(Indexes indexes) {
             if (!(indexes.areDiagonal())) {
-                throw new IllegalArgumentException(new nonSquareException(indexes));
+                throw new IllegalArgumentException(new NonSquareException(indexes));
             }
             return indexes;
         }
@@ -193,8 +193,8 @@ public final class MatrixMap<T> {
         Objects.requireNonNull(ring);
         Objects.requireNonNull(other);
         InconsistentSizeException.requireMatchingSize(this, other);
-        nonSquareException.requireDiagonal(this.size());
-        nonSquareException.requireDiagonal(other.size());
+        NonSquareException.requireDiagonal(this.size());
+        NonSquareException.requireDiagonal(other.size());
 
         return instance(this.size(), indexes -> ring.product(this.value(indexes), other.value(indexes)));
     }
