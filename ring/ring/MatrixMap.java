@@ -7,9 +7,6 @@ import java.util.Objects;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import ring.MatrixMap.InvalidLengthException.Cause;
 
 public final class MatrixMap<T> {
     private final Map<Indexes, T> matrix;
@@ -158,8 +155,8 @@ public final class MatrixMap<T> {
     public static <S> MatrixMap<S> instance(Indexes size, Function<Indexes, S> valueMapper) {
         Objects.requireNonNull(size);
         Objects.requireNonNull(valueMapper);
-        InvalidLengthException.requireNonEmpty(Cause.ROW, size.row());
-        InvalidLengthException.requireNonEmpty(Cause.COLUMN, size.column());
+        InvalidLengthException.requireNonEmpty(InvalidLengthException.Cause.ROW, size.row());
+        InvalidLengthException.requireNonEmpty(InvalidLengthException.Cause.COLUMN, size.column());
 
         Map<Indexes, S> matrix = Indexes.stream(size)
                 .collect(Collectors.toMap(indexes -> indexes, indexes -> valueMapper.apply(indexes)));
