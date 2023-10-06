@@ -121,9 +121,18 @@ public class MatrixMapTests {
 
     @Test
     public void plus() {
+        assertThrows(NullPointerException.class, () -> bigMatrixMap.plus(bigMatrixMap, null));
+        assertThrows(NullPointerException.class, () -> bigMatrixMap.plus(bigMatrixMapNull, BigInteger::add));
+        assertThrows(IllegalArgumentException.class, () -> bigMatrixMap.plus(bigMatrixMapConstant, BigInteger::add));
     }
 
     @Test
     public void times() {
+        assertThrows(NullPointerException.class, () -> bigMatrixMap.times(bigMatrixMapNull, new BigIntegerRing()));
+        assertThrows(NullPointerException.class, () -> bigMatrixMap.times(bigMatrixMapIdentity, null));
+        assertThrows(IllegalArgumentException.class,
+                () -> bigMatrixMap.times(bigMatrixMapConstant, new BigIntegerRing()));
+        assertThrows(IllegalArgumentException.class,
+                () -> bigMatrixMapRectangularTwo.times(bigMatrixMapRectangular, new BigIntegerRing()));
     }
 }
