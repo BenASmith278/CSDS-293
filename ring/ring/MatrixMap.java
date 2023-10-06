@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import ring.MatrixMap.InvalidLengthException.Cause;
 
@@ -123,7 +124,8 @@ public final class MatrixMap<T> {
 
         public static <T> Indexes requireMatchingSize(MatrixMap<T> thisMatrix, MatrixMap<T> otherMatrix) {
             if (thisMatrix.size() != otherMatrix.size()) {
-                throw new IllegalArgumentException(new InconsistentSizeException(thisMatrix.size(), otherMatrix.size()));
+                throw new IllegalArgumentException(
+                        new InconsistentSizeException(thisMatrix.size(), otherMatrix.size()));
             }
             return thisMatrix.size();
         }
@@ -160,7 +162,7 @@ public final class MatrixMap<T> {
         InvalidLengthException.requireNonEmpty(Cause.COLUMN, size.column());
 
         Map<Indexes, S> matrix = Indexes.stream(size)
-                .collect(Collectors.toMap(Indexes -> Indexes, values -> valueMapper.apply(values)));
+                .collect(Collectors.toMap(indexes -> indexes, indexes -> valueMapper.apply(indexes)));
         return new MatrixMap<S>(matrix);
     }
 
@@ -187,7 +189,7 @@ public final class MatrixMap<T> {
         Objects.requireNonNull(plus);
         InconsistentSizeException.requireMatchingSize(this, other);
 
-        return null;
+        return instance(this.size(), indexes -> plus.apply(this.value(indexes), other.value(indexes)));
     }
 
     public MatrixMap<T> times(MatrixMap<T> other, Ring<T> ring) {
@@ -196,7 +198,7 @@ public final class MatrixMap<T> {
         InconsistentSizeException.requireMatchingSize(this, other);
         nonSquareException.requireDiagonal(this.size());
         nonSquareException.requireDiagonal(other.size());
-        
-        return null;
+
+        return instance(this.size(), indexes -> ring.product(this.value(indexes), other.value(indexes)));
     }
 }
