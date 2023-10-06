@@ -194,7 +194,6 @@ public final class MatrixMap<T> {
         Objects.requireNonNull(other);
         InconsistentSizeException.requireMatchingSize(this, other);
         NonSquareException.requireDiagonal(this.size());
-        NonSquareException.requireDiagonal(other.size());
 
         return instance(this.size(), indexes -> ring.product(this.value(indexes), other.value(indexes)));
     }
