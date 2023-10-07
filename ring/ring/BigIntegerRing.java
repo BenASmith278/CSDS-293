@@ -1,23 +1,24 @@
 package ring;
 
 import java.util.Objects;
+import java.math.BigInteger;
 
-class BigIntegerRing implements Ring<java.math.BigInteger> {
-    public java.math.BigInteger zero() {
-        return java.math.BigInteger.ZERO;
+class BigIntegerRing implements Ring<BigInteger> {
+    public BigInteger zero() {
+        return BigInteger.ZERO;
     }
 
-    public java.math.BigInteger identity() {
-        return java.math.BigInteger.ONE;
+    public BigInteger identity() {
+        return BigInteger.ONE;
     }
 
-    public java.math.BigInteger sum(java.math.BigInteger x, java.math.BigInteger y) {
+    public BigInteger sum(BigInteger x, BigInteger y) {
         Objects.requireNonNull(x);
         Objects.requireNonNull(y);
         return x.add(y);
     }
 
-    public java.math.BigInteger product(java.math.BigInteger x, java.math.BigInteger y) {
+    public BigInteger product(BigInteger x, BigInteger y) {
         Objects.requireNonNull(x);
         Objects.requireNonNull(y);
         return x.multiply(y);
