@@ -3,6 +3,8 @@ package ring;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.util.List;
+import java.util.function.BinaryOperator;
 
 import org.junit.Test;
 
@@ -12,33 +14,57 @@ import ring.MatrixMap.NonSquareException;
 import ring.MatrixMap.InvalidLengthException.Cause;
 
 public class MatrixMapTests {
-    public Indexes zeroIndex = new Indexes(0, 0);
-    public Indexes oneIndex = new Indexes(1, 1);
-    public Indexes nonZeroIndex = new Indexes(1, 2);
-    public Indexes nullIndex = null;
-    public Integer[][] matrix = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
-    public Integer[][] onesMatrix = { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } };
-    public Integer[][] identityMatrix = { { 1, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0 }, { 0, 0, 1, 0, 0 }, { 0, 0, 0, 1, 0 },
+    Indexes zeroIndex = new Indexes(0, 0);
+    Indexes oneIndex = new Indexes(1, 1);
+    Indexes nonZeroIndex = new Indexes(1, 2);
+    Indexes nullIndex = null;
+
+    Polynomial<BigInteger> polynomialOne = Polynomial.from(List.of(BigInteger.ONE, BigInteger.ONE, BigInteger.ONE));
+    Polynomial<BigInteger> polynomialTwo = Polynomial.from(List.of(BigInteger.TWO, BigInteger.TWO, BigInteger.TWO));
+    Polynomial<BigInteger> polynomialThree = Polynomial.from(List.of(BigInteger.ZERO, BigInteger.ONE));
+    Polynomial<BigInteger> polynomialFour = Polynomial.from(List.of(BigInteger.ONE, BigInteger.TWO));
+    Polynomial<BigInteger> polynomialNull = null;
+    PolynomialRing<BigInteger> polynomialRing = PolynomialRing.instance(new BigIntegerRing());
+
+    List<Polynomial<BigInteger>> polynomialList = List.of(polynomialOne);
+
+    Integer[][] matrix = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+    Integer[][] onesMatrix = { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } };
+    Integer[][] identityMatrix = { { 1, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0 }, { 0, 0, 1, 0, 0 }, { 0, 0, 0, 1, 0 },
             { 0, 0, 0, 0, 1 } };
-    public Integer[][] functionMatrix = { { 0, 1, 2 }, { 1, 2, 3 }, { 2, 3, 4 } };
-    public Integer[][] emptyMatrix = {};
-    public Integer[][] nullMatrix = null;
-    public BigInteger[][] bigMatrix = { { BigInteger.ZERO, BigInteger.ONE, BigInteger.TWO },
+    Integer[][] functionMatrix = { { 0, 1, 2 }, { 1, 2, 3 }, { 2, 3, 4 } };
+    Integer[][] emptyMatrix = {};
+    Integer[][] nullMatrix = null;
+
+    BigInteger[][] bigMatrix = { { BigInteger.ZERO, BigInteger.ONE, BigInteger.TWO },
             { BigInteger.ONE, BigInteger.TWO, BigInteger.valueOf(3) } };
-    public MatrixMap<Integer> matrixMap = MatrixMap.from(matrix);
-    public MatrixMap<Integer> matrixMapConstant = MatrixMap.constant(2, 1);
-    public MatrixMap<Integer> matrixMapIdentity = MatrixMap.identity(4, 0, 1);
-    public MatrixMap<Integer> matrixMapNull = null;
-    public MatrixMap<BigInteger> bigMatrixMap = MatrixMap.instance(new Indexes(4, 4),
+    
+    MatrixMap<Integer> matrixMap = MatrixMap.from(matrix);
+    MatrixMap<Integer> matrixMapConstant = MatrixMap.constant(2, 1);
+    MatrixMap<Integer> matrixMapIdentity = MatrixMap.identity(4, 0, 1);
+    MatrixMap<Integer> matrixMapNull = null;
+
+    MatrixMap<BigInteger> bigMatrixMap = MatrixMap.instance(new Indexes(4, 4),
             indexes -> BigInteger.valueOf(indexes.row() + indexes.column()));
-    public MatrixMap<BigInteger> bigMatrixMapIdentity = MatrixMap.identity(4, BigInteger.ZERO, BigInteger.ONE);
-    public MatrixMap<BigInteger> bigMatrixMapConstant = MatrixMap.constant(2, BigInteger.TWO);
-    public MatrixMap<BigInteger> bigMatrixMapRectangular = MatrixMap.from(bigMatrix);
-    public MatrixMap<BigInteger> bigMatrixMapRectangularTwo = MatrixMap.from(bigMatrix);
-    public MatrixMap<BigInteger> bigMatrixMapNull = null;
-    public InvalidLengthException invalidLength = new InvalidLengthException(InvalidLengthException.Cause.ROW, 0);
-    public InconsistentSizeException inconsistentSize = new InconsistentSizeException(oneIndex, nonZeroIndex);
-    public NonSquareException nonSquare = new NonSquareException(nonZeroIndex);
+    MatrixMap<BigInteger> bigMatrixMapIdentity = MatrixMap.identity(4, BigInteger.ZERO, BigInteger.ONE);
+    MatrixMap<BigInteger> bigMatrixMapConstantOne = MatrixMap.constant(2, BigInteger.ONE);
+    MatrixMap<BigInteger> bigMatrixMapConstantTwo = MatrixMap.constant(2, BigInteger.TWO);
+    MatrixMap<BigInteger> bigMatrixMapRectangular = MatrixMap.from(bigMatrix);
+    MatrixMap<BigInteger> bigMatrixMapRectangularTwo = MatrixMap.from(bigMatrix);
+    MatrixMap<BigInteger> bigMatrixMapNull = null;
+
+    MatrixMap<Polynomial<BigInteger>> bigPolyMatrixMap = MatrixMap.instance(new Indexes(2, 2),
+            indexes -> Polynomial.from(List.of(BigInteger.valueOf(indexes.row() + indexes.column()), BigInteger.ONE)));
+    MatrixMap<Polynomial<BigInteger>> bigPolyMatrixMapIdentity = MatrixMap.identity(2, polynomialRing.zero(),
+            polynomialRing.identity());
+    MatrixMap<Polynomial<BigInteger>> bigPolyMatrixMapConstantOne = MatrixMap.constant(2, polynomialOne);
+    MatrixMap<Polynomial<BigInteger>> bigPolyMatrixMapConstantTwo = MatrixMap.constant(2, polynomialTwo);
+
+    InvalidLengthException invalidLength = new InvalidLengthException(InvalidLengthException.Cause.ROW, 0);
+    InconsistentSizeException inconsistentSize = new InconsistentSizeException(oneIndex, nonZeroIndex);
+    NonSquareException nonSquare = new NonSquareException(nonZeroIndex);
+
+    BinaryOperator<Polynomial<BigInteger>> addPolynomials = (p1, p2) -> p1.plus(p2, new BigIntegerRing());
 
     public Integer testFunction(Indexes indexes) {
         return indexes.row() + indexes.column();
@@ -123,7 +149,10 @@ public class MatrixMapTests {
     public void plus() {
         assertThrows(NullPointerException.class, () -> bigMatrixMap.plus(bigMatrixMap, null));
         assertThrows(NullPointerException.class, () -> bigMatrixMap.plus(bigMatrixMapNull, BigInteger::add));
-        assertThrows(IllegalArgumentException.class, () -> bigMatrixMap.plus(bigMatrixMapConstant, BigInteger::add));
+        assertThrows(IllegalArgumentException.class, () -> bigMatrixMap.plus(bigMatrixMapConstantTwo, BigInteger::add));
+
+        assertEquals(bigMatrixMapConstantTwo, bigMatrixMapConstantOne.plus(bigMatrixMapConstantOne, BigInteger::add));
+        assertEquals(bigPolyMatrixMapConstantTwo, bigPolyMatrixMapConstantOne.plus(bigPolyMatrixMapConstantOne, addPolynomials));
     }
 
     @Test
@@ -131,8 +160,11 @@ public class MatrixMapTests {
         assertThrows(NullPointerException.class, () -> bigMatrixMap.times(bigMatrixMapNull, new BigIntegerRing()));
         assertThrows(NullPointerException.class, () -> bigMatrixMap.times(bigMatrixMapIdentity, null));
         assertThrows(IllegalArgumentException.class,
-                () -> bigMatrixMap.times(bigMatrixMapConstant, new BigIntegerRing()));
+                () -> bigMatrixMap.times(bigMatrixMapConstantTwo, new BigIntegerRing()));
         assertThrows(IllegalArgumentException.class,
                 () -> bigMatrixMapRectangularTwo.times(bigMatrixMapRectangular, new BigIntegerRing()));
+
+        assertEquals(bigMatrixMap, bigMatrixMap.times(bigMatrixMapIdentity, new BigIntegerRing()));
+        assertEquals(bigPolyMatrixMap, bigPolyMatrixMap.times(bigPolyMatrixMapIdentity, polynomialRing));
     }
 }
